@@ -9,7 +9,8 @@ from DQN.dqn import DQN_Agent
 from GCL.cost import CostNN
 #from GCL.utils import to_one_hot, get_cumulative_rewards
 
-from torch.optim.lr_scheduler import StepLR
+#from torch.optim.lr_scheduler import StepLR
+from mail import send_mail
 from utils_v3 import generate_session, preprocess_traj, render, exp_replay_size
 
 # SEEDS
@@ -149,3 +150,4 @@ for i in range(EPISODES):
         break
 
 render(agent, env)
+send_mail('plots/GCL_learning_curve_v3.png')
