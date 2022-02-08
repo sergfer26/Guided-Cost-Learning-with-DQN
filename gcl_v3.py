@@ -10,7 +10,7 @@ from GCL.cost import CostNN
 #from GCL.utils import to_one_hot, get_cumulative_rewards
 
 #from torch.optim.lr_scheduler import StepLR
-from mail import send_mail
+#from mail import send_mail
 from utils_v3 import generate_session, preprocess_traj, render, exp_replay_size
 
 # SEEDS
@@ -98,9 +98,9 @@ for i in range(EPISODES):
 
     for traj in trajs:
         states, actions, rewards = traj
-        states = torch.tensor(states, dtype=torch.float32)
+        states = torch.tensor(np.array(states), dtype=torch.float32)
         #probs = torch.tensor(probs, dtype=torch.float32)
-        actions = torch.tensor(actions, dtype=torch.float32)
+        actions = torch.tensor(np.array(actions), dtype=torch.float32)
         costs = cost_f(torch.cat((states, actions.reshape(-1, 1)), dim=-1)).detach().numpy()
     
     returns = sum(rewards)
@@ -116,9 +116,9 @@ for i in range(EPISODES):
     trajs_ = [generate_session(agent, env, cost_f, train=True) for _ in range(EPISODES_TO_PLAY)]
     for traj in trajs_:
         states, actions, rewards = traj
-        states = torch.tensor(states, dtype=torch.float32)
+        states = torch.tensor(np.array(states), dtype=torch.float32)
         #probs = torch.tensor(probs, dtype=torch.float32)
-        actions = torch.tensor(actions, dtype=torch.float32)
+        actions = torch.tensor(np.array(actions), dtype=torch.float32)
         costs = cost_f(torch.cat((states, actions.reshape(-1, 1)), dim=-1)).detach().numpy()
 
     # PLOTTING PERFORMANCE
@@ -143,12 +143,12 @@ for i in range(EPISODES):
         plt.grid()
 
         # plt.show()
-        plt.savefig('plots/GCL_learning_curve_v3.png')
+        plt.savefig('plots/GCL_learning_curve_v4.png')
         plt.close()
 
     if np.mean(return_list) > EPISODES:
         break
 
 #render(agent, env)
-agent.save('/net')
-send_mail('plots/GCL_learning_curve_v3.png')
+agent.save('net_v4')
+#send_mail('plots/GCL_learning_curve_v3.png')
