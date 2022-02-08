@@ -2,6 +2,7 @@ import torch
 import copy
 import random
 import pathlib
+import numpy as np
 from torch import nn 
 from collections import deque
 
@@ -16,10 +17,10 @@ class Memory:
 
     def sample(self, sample_size):
         sample = random.sample(self.experience, sample_size)
-        s = torch.tensor([exp[0] for exp in sample]).float()
-        a = torch.tensor([exp[1] for exp in sample]).float()
-        rn = torch.tensor([exp[2] for exp in sample]).float()
-        sn = torch.tensor([exp[3] for exp in sample]).float()   
+        s = torch.tensor(np.array([exp[0] for exp in sample])).float()
+        a = torch.tensor(np.array([exp[1] for exp in sample])).float()
+        rn = torch.tensor(np.array([exp[2] for exp in sample])).float()
+        sn = torch.tensor(np.array([exp[3] for exp in sample])).float()   
         return s, a, rn, sn
 
     def __len__(self):
@@ -81,7 +82,7 @@ class DQN_Agent:
         
         # get target return using target network
         q_next = self.get_q_next(sn.to(DEV))
-        target_return = rn.to(DEV) + self.gamma * q_next
+        target_return = rn.to(DEV).squeeze() + self.gamma * q_next
         
         loss = self.loss_fn(pred_return, target_return)
         self.optimizer.zero_grad()
