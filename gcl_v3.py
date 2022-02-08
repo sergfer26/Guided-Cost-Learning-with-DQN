@@ -149,5 +149,6 @@ for i in range(EPISODES):
     if np.mean(return_list) > EPISODES:
         break
 
-render(agent, env)
+#render(agent, env)
+agent.save('/net')
 send_mail('plots/GCL_learning_curve_v3.png')
