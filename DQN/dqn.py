@@ -1,6 +1,7 @@
 import torch 
 import copy
 import random
+import pathlib
 from torch import nn 
 from collections import deque
 
@@ -89,3 +90,12 @@ class DQN_Agent:
         
         self.network_sync_counter += 1       
         return loss.item()
+
+    def save(self, path):
+        pathlib.Path(path).mkdir(parents=True, exist_ok=True)
+        torch.save(self.q_net.state_dict(), path + "/q_net")
+        self.target_net = copy.deepcopy(self.q_net)
+    
+    def load(self, path):
+        self.q_net.load_state_dict(torch.load(
+            path + "/q_net", map_location=DEV))
